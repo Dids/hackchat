@@ -24,8 +24,7 @@ coverage.txt
 /release
 /debug/
 /release/
-/github-release-cleaner
-/githubby
+/hackchat
 
 # Packr
 /packrd/
