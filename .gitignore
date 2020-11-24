@@ -15,6 +15,9 @@ coverage.txt
 #vendor/
 
 # Other
+*.log
+/.tmp
+/tmp
 /go/
 /build/
 /test.sh

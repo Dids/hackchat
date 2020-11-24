@@ -3,8 +3,9 @@ package hackmud
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // UserName is just a string wrapper
@@ -33,7 +34,7 @@ func (c *Client) GetAccountData() (*AccountData, error) {
 
 	req, err := http.NewRequest("POST", fmt.Sprintf("%s/mobile/account_data.json", c.baseURL), bytes.NewBuffer(reqBody))
 	if err != nil {
-		log.Println("GetAccountData failed to create request:", err)
+		log.Error("GetAccountData failed to create request:", err)
 		return nil, err
 	}
 
@@ -41,16 +42,16 @@ func (c *Client) GetAccountData() (*AccountData, error) {
 
 	res := AccountData{}
 	if err := c.sendRequest(req, &res); err != nil {
-		log.Println("GetAccountData failed to send request:", err)
+		log.Error("GetAccountData failed to send request:", err)
 		return nil, err
 	}
 
 	// Pretty print the JSON response
 	// if json, err := InterfaceToJSON(res); err == nil {
-	// 	log.Println(json)
+	// 	log.Info(json)
 	// }
 
-	// log.Println("Returning GetAccountData response:", res)
+	// log.Info("Returning GetAccountData response:", res)
 	return &res, nil
 }
 

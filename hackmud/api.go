@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // Client for API operations
@@ -48,7 +49,7 @@ func (c *Client) sendRequest(req *http.Request, v interface{}) error {
 	res, err := c.HTTPClient.Do(req)
 	if err != nil {
 		if c.Debug {
-			log.Println("HTTP call failed")
+			log.Error("HTTP call failed")
 		}
 		return err
 	}
@@ -59,7 +60,7 @@ func (c *Client) sendRequest(req *http.Request, v interface{}) error {
 	if res.StatusCode != http.StatusOK {
 		var errRes errorResponse
 		if err = json.NewDecoder(res.Body).Decode(&errRes); err == nil {
-			log.Println("Early response decoding failed:", errRes)
+			log.Error("Early response decoding failed:", errRes)
 			return errors.New(errRes.Message)
 		}
 
@@ -70,7 +71,7 @@ func (c *Client) sendRequest(req *http.Request, v interface{}) error {
 	//       incoming interface embeds "successResponse" or "errorResponse"..
 	if err = json.NewDecoder(res.Body).Decode(&v); err != nil {
 		if c.Debug {
-			log.Println("Late response decoding failed")
+			log.Error("Late response decoding failed")
 		}
 		return err
 	}
@@ -80,7 +81,7 @@ func (c *Client) sendRequest(req *http.Request, v interface{}) error {
 	// Pretty print the JSON response
 	// if c.Debug {
 	// 	if json, err := InterfaceToJSON(v); err == nil {
-	// 		log.Println("Response:", json)
+	// 		log.Info("Response:", json)
 	// 	}
 	// }
 
