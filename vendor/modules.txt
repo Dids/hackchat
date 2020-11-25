@@ -11,7 +11,7 @@ github.com/joho/godotenv/autoload
 # github.com/sirupsen/logrus v1.7.0
 ## explicit
 github.com/sirupsen/logrus
-# golang.org/x/crypto v0.0.0-20201117144127-c1f2f97bffc9
+# golang.org/x/crypto v0.0.0-20201124201722-c8d3bf9c5392
 ## explicit
 golang.org/x/crypto/internal/subtle
 golang.org/x/crypto/nacl/secretbox
