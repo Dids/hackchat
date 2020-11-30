@@ -19,6 +19,7 @@ var (
 )
 
 func main() {
+        log.Println("Starting up")
 	// TODO: Does logrus close the file or do we need to close it ourselves?
 	// Log to both console and file
 	logFile, logFileErr := os.OpenFile("hackchat.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
