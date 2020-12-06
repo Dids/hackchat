@@ -56,7 +56,8 @@ deps: ## Install dependencies
 	@# [#27643](https://github.com/golang/go/issues/27643)
 	@# [#30515](https://github.com/golang/go/issues/30515)
 	@# [#40276](https://github.com/golang/go/issues/40276
-	cd $(GOPATH) && GOMODULE111=off GOPROXY=direct go get github.com/cosmtrek/air
+	@#cd $(GOPATH) && GOMODULE111=off GOPROXY=direct go get github.com/cosmtrek/air
+	go install github.com/cosmtrek/air@v1.15.1
 
 upgrade: ## Upgrade dependencies
 	go get -u ./...
