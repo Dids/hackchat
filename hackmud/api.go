@@ -70,22 +70,25 @@ func (c *Client) sendRequest(req *http.Request, v interface{}) error {
 		return fmt.Errorf("Unknown error with status code: %d", res.StatusCode)
 	}
 
+	// TODO: If we do this, then we can't decode res.Body again, but could we reuse it somehow?
 	// Unmarshal and validate the success response
-	var succRes successResponse
-	if err = json.NewDecoder(res.Body).Decode(&succRes); err != nil {
-		if c.Debug {
-			log.Error("Success response decoding failed")
-		}
-		return err
-	}
-	if !succRes.OK {
-		return errors.New("Success response not OK")
-	}
+	// var succRes successResponse
+	// if err = json.NewDecoder(res.Body).Decode(&succRes); err != nil {
+	// 	if c.Debug {
+	// 		log.Error("Success response decoding failed")
+	// 	}
+	// 	return err
+	// }
+	// if !succRes.OK {
+	// 	return errors.New("Success response not OK")
+	// }
+
+	// log.Println("succRes:", succRes)
 
 	// Unmarshal and validate the final response
 	if err = json.NewDecoder(res.Body).Decode(&v); err != nil {
 		if c.Debug {
-			log.Error("Final response decoding failed")
+			log.Error("Final response decoding failed", v)
 		}
 		return err
 	}

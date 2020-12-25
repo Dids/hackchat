@@ -2,6 +2,7 @@ package discord
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -42,4 +43,9 @@ func (c *Client) Start() error {
 
 func (c *Client) Stop() error {
 	return c.DiscordClient.Close()
+}
+
+func (c *Client) Send(message string) error {
+	_, err := c.DiscordClient.ChannelMessageSend(os.Getenv("HACKMUD_CHANNEL_ID"), message)
+	return err
 }

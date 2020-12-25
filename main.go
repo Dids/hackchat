@@ -19,7 +19,7 @@ var (
 )
 
 func main() {
-        log.Println("Starting up")
+	log.Println("Starting up")
 	// TODO: Does logrus close the file or do we need to close it ourselves?
 	// Log to both console and file
 	logFile, logFileErr := os.OpenFile("hackchat.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
@@ -39,20 +39,29 @@ func main() {
 	// Enable request debugging
 	Hackmud.Debug = true
 
-	// TODO: Implement all other API endpoints as well
-	// Attempt to get the account data
-	_, err := Hackmud.GetAccountData()
-	if err != nil {
-		panic(err)
-	}
-	// log.Println("Got account data:", account)
-
 	Discord = discord.NewClient(os.Getenv("DISCORD_API_TOKEN"))
 
 	log.Info("Starting Discord client..")
 	if err := Discord.Start(); err != nil {
 		panic(err)
 	}
+
+	// FIXME: We need to have an event handler/delegate
+	//        which controls the data flow between hackmud
+	//        and Discord, otherwise this won't really work!
+
+	// TODO: Implement all other API endpoints as well
+	// Attempt to get the account data
+	// accountData, err := Hackmud.GetAccountData()
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// log.Println("Got account data:", account)
+
+	// TODO: This works, but should be formatted better etc.
+	// if err := Discord.Send("```json\n" + accountData.ToJSON() + "\n```"); err != nil {
+	// 	log.Error(err)
+	// }
 
 	// Wait for CTRL-C
 	log.Info("Hackchat bot is now running.  Press CTRL-C to exit.")

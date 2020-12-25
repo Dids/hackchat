@@ -1,6 +1,8 @@
 package discord
 
 import (
+	"os"
+
 	log "github.com/sirupsen/logrus"
 
 	"github.com/bwmarrin/discordgo"
@@ -12,21 +14,43 @@ import (
 // This function will be called (due to AddHandler above) every time a new
 // message is created on any channel that the authenticated bot has access to.
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
-	log.Info("Discord message received:", m.Content)
-
 	// Ignore all messages created by the bot itself
 	// This isn't required in this specific example but it's a good practice.
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
 
-	// If the message is "ping" reply with "Pong!"
-	if m.Content == "ping" {
-		s.ChannelMessageSend(m.ChannelID, "Pong!")
-	}
+	// Detect if we're dealing with a command
+	isCommand := m.Content[0] == '!'
 
-	// If the message is "pong" reply with "Ping!"
-	if m.Content == "pong" {
-		s.ChannelMessageSend(m.ChannelID, "Ping!")
+	// Detect if the message is from an owner
+	isOwner := m.Author.ID == os.Getenv("HACKMUD_OWNER_ID")
+
+	// Handle commands
+	if isCommand {
+		// Don't run any commands if not the owner
+		if !isOwner {
+			log.Warn("User '" + m.Author.Username + "' is not allowed to run '" + m.Content + "' command")
+			s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+">, request denied")
+			return
+		}
+
+		log.Info("User '" + m.Author.Username + "' ran '" + m.Content + "' command")
+
+		// TODO: Refactor this so we can easily detect unknown/unavailable commands
+		// TODO: Actually measure some kind of latency with this (latency from Discord API?)
+		// Handle ping/pong commands
+		if m.Content == "!ping" {
+			s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> ***PONG!***")
+		} else if m.Content == "!pong" {
+			s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> ***PING!***")
+		} else {
+			// TODO: Use the following regex to validate commands (a-z and lowercase only, otherwise invalid)
+			//       ^!([a-z]+)$
+			s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> _Unknown command: "+m.Content+"_")
+		}
+	} else {
+		// TODO: Handle two-way chat bridge logic here
+		log.Info("[CHAT] " + m.Author.Username + ": " + m.Content)
 	}
 }
