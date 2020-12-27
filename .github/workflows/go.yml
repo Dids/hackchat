@@ -26,7 +26,6 @@ jobs:
       #run: make deps
       run: |
         go build -v -mod=vendor ./...
-        cd ../ && go get github.com/cosmtrek/air@v1.15.1
 
     - name: Build
       run: make build
