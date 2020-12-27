@@ -22,7 +22,11 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Get dependencies
-      run: make deps
+      ## FIXME: Temporary workaround once Go 1.16 releases
+      #run: make deps
+      run: |
+        go build -v -mod=vendor ./...
+        go get github.com/cosmtrek/air@v1.15.1
 
     - name: Build
       run: make build
