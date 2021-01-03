@@ -1,6 +1,8 @@
 package discord
 
 import (
+	"io/ioutil"
+	"net/http"
 	"os"
 
 	log "github.com/sirupsen/logrus"
@@ -44,6 +46,20 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> ***PONG!***")
 		} else if m.Content == "!pong" {
 			s.ChannelMessageSend(m.ChannelID, "<@"+m.Author.ID+"> ***PING!***")
+			// Handle inspire command
+		} else if m.Content == "!inspire" {
+			resp, err := http.Get("https://inspirobot.me/api?generate=true")
+			if err != nil {
+				log.Error(err)
+				return
+			}
+			defer resp.Body.Close()
+			body, err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				log.Error(err)
+				return
+			}
+			s.ChannelMessageSend(m.ChannelID, string(body))
 		} else {
 			// TODO: Use the following regex to validate commands (a-z and lowercase only, otherwise invalid)
 			//       ^!([a-z]+)$
