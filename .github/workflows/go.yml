@@ -1,10 +1,25 @@
+## TODO:
+## - Matrix/multi-platform builds
+## - Reusable steps/workflows, for things like Slack notifications
+
 name: Go
 
+## TODO: Configure accordingly
 on:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+
+env:
+  # Project configuration
+  PROJECT_NAME: hackchat
+
+  # Global Slack notification configuration
+  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+  SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
+  SLACK_USERNAME: GitHub Actions
+  SLACK_ICON: https://avatars1.githubusercontent.com/u/44036562?s=280&v=4
 
 jobs:
 
@@ -19,7 +34,7 @@ jobs:
     - name: Prepare
       id: prep
       run: |
-        DOCKER_IMAGE=Dids/hackchat/hackchat
+        DOCKER_IMAGE=${GITHUB_REPOSITORY}/${PROJECT_NAME}
         VERSION=edge
         if [[ $GITHUB_REF == refs/tags/* ]]; then
           VERSION=${GITHUB_REF#refs/tags/}
@@ -87,3 +102,18 @@ jobs:
           org.opencontainers.image.source=${{ github.event.repository.html_url }}
           org.opencontainers.image.created=${{ steps.prep.outputs.created }}
           org.opencontainers.image.revision=${{ github.sha }}
+
+    - name: Failure notification
+      if: failure()
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_COLOR: '#de0d0d'
+        SLACK_TITLE: Docker Publish FAILED
+        SLACK_MESSAGE: ':x: _${{ env.PROJECT_NAME }}_ failed to publish with tag *${{ steps.prep.outputs.tags }}*'
+
+    - name: Success notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_COLOR: '#1eb80d'
+        SLACK_TITLE: Docker Publish SUCCESS
+        SLACK_MESSAGE: ':white_check_mark: _${{ env.PROJECT_NAME }}_ published with tag *${{ steps.prep.outputs.tags }}*'
