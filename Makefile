@@ -35,7 +35,7 @@ EXTRA_FLAGS?=-mod=vendor
 # Run commands in a -c flag 
 .SHELLFLAGS = -c
 
-.SILENT: ;               # no need for @
+#.SILENT: ;               # no need for @
 .ONESHELL: ;             # recipes execute in same shell
 .NOTPARALLEL: ;          # wait for this target to finish
 .EXPORT_ALL_VARIABLES: ; # send all vars to shell
