@@ -41,14 +41,18 @@ jobs:
         ##       for macOS, eg. Intel + aarch64 in one binary, right?
         run: make deps
 
-      - name: Build the project
-        run: make build
-
       - name: Test the project
         run: |
           make test
           make install
           make uninstall
+          ls -la
+
+      - name: Build the project
+        #run: make build
+        run: |
+          ls -la
+          make build
           ls -la
 
       ## TODO: Signify arch/platform in binary name,
