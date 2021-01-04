@@ -44,16 +44,16 @@ jobs:
       - name: Test the project
         run: |
           make test
+          make build
           make install
           make uninstall
-          ls -la
 
-      - name: Build the project
-        #run: make build
-        run: |
-          ls -la
-          make build
-          ls -la
+      # - name: Build the project
+      #   #run: make build
+      #   run: |
+      #     ls -la
+      #     make build
+      #     ls -la
 
       ## TODO: Signify arch/platform in binary name,
       ##       at least once we do multi-platform builds
