@@ -12,7 +12,7 @@ WORKDIR /tmp/hackchat/
 RUN make deps
 
 # Build and test the binary
-RUN ls -la .git && make build && \
+RUN make build && \
     cp hackchat /go/bin/hackchat && \
     /go/bin/hackchat version
 #RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -ldflags="-w -s" -o /go/bin/hackchat

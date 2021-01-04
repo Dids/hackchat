@@ -49,14 +49,17 @@ jobs:
           make test
           make install
           make uninstall
+          ls -la
 
       ## TODO: Signify arch/platform in binary name,
       ##       at least once we do multi-platform builds
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: hackchat
-          path: hackchat
+          # name: hackchat # Not specifying a name uses the name of the last path component
+          ## FIXME: This can't seem to find the file at the current path, needs full path?!
+          path: ./hackchat
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn` 
 
   publish:
     name: Publish
@@ -82,7 +85,7 @@ jobs:
         id: prep
         run: |
           #DOCKER_IMAGE=${GITHUB_REPOSITORY,,}/${PROJECT_NAME,,}
-          DOCKER_IMAGE=${GITHUB_REPOSITORY,,}
+          DOCKER_IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}
           VERSION=edge
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             VERSION=${GITHUB_REF#refs/tags/}
