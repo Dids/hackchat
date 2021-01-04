@@ -13,10 +13,10 @@ ENV = /usr/bin/env
 
 #export PATH := $(GOPATH)/bin:$(PATH)
 
-TAG_COMMIT := $(shell -e git rev-list --abbrev-commit --tags --max-count=1)
-TAG := $(shell -e git describe --abbrev=0 --tags ${TAG_COMMIT} 2>/dev/null || true)
-COMMIT := $(shell -e git rev-parse --short HEAD)
-DATE := $(shell -e git log -1 --format=%cd --date=format:"%Y%m%d")
+TAG_COMMIT := $(shell git rev-list --abbrev-commit --tags --max-count=1)
+TAG := $(shell git describe --abbrev=0 --tags ${TAG_COMMIT} 2>/dev/null || true)
+COMMIT := $(shell git rev-parse --short HEAD)
+DATE := $(shell git log -1 --format=%cd --date=format:"%Y%m%d")
 VERSION := $(TAG:v%=%)
 ifneq ($(COMMIT), $(TAG_COMMIT))
 	VERSION := $(VERSION)-next-$(COMMIT)-$(DATE)
@@ -24,7 +24,7 @@ endif
 ifeq ($(VERSION),)
 	VERSION := $(COMMIT)-$(DATE)
 endif
-ifneq ($(shell -e git status --porcelain),)
+ifneq ($(shell git status --porcelain),)
 	VERSION := $(VERSION)-dirty
 endif
 
