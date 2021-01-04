@@ -1,0 +1,9 @@
+#version: "3.9" # NOTE: Optional since v1.27.0
+
+services:
+
+  hackchat:
+    ## FIXME: Re-enable after the image has been pushed, if this is even possible to use both?!
+    ##        I just want it to tag it as the "correct" image..
+    #image: docker.pkg.github.com/Dids/hackchat/hackchat:latest
+    build: .

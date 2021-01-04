@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"os/signal"
@@ -25,6 +26,23 @@ var (
 )
 
 func main() {
+	// Handle arguments
+	args := os.Args[1:]
+	if len(args) > 0 {
+		// Handle "hackchat version" command
+		if args[0] == "version" {
+			fmt.Println("hackchat " + version)
+			os.Exit(0)
+		} else {
+			if len(args) == 1 {
+				fmt.Println("Invalid argument:", args[0])
+			} else {
+				fmt.Println("Invalid arguments:", args)
+			}
+			os.Exit(-1)
+		}
+	}
+
 	log.Println("--- hackchat "+version, "---")
 
 	log.Println("Starting up")
