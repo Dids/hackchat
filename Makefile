@@ -68,7 +68,6 @@ clean: ## Cleanup temporary files
 
 deps: ## Install dependencies
 	go build -v $(EXTRA_FLAGS) ./...
-	go install github.com/cosmtrek/air@v1.15.1
 
 upgrade: ## Upgrade dependencies
 	go get -d
@@ -79,5 +78,6 @@ tidy: ## Cleanup Go modules
 	go mod tidy
 
 dev: ## Start in hot reload mode
+	go install github.com/cosmtrek/air@v1.15.1
 	rm -fr *.log .tmp
 	air -c .air.toml

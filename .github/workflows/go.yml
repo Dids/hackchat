@@ -39,15 +39,14 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: ^1.15
+        go-version: ^1.15 ## TODO: Switch to Go 1.16 once it releases
 
     - name: Get dependencies
       ## TODO: Once Go 1.16 releases, try doing universal binaries
       ##       for macOS, eg. Intel + aarch64 in one binary, right?
-      ## FIXME: Temporary workaround until Go 1.16 releases
-      #run: make deps
-      run: |
-        go build -v -mod=vendor ./...
+      run: make deps
+      # run: |
+      #   go build -v -mod=vendor ./...
 
     - name: Build
       run: make build
