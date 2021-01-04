@@ -41,12 +41,16 @@ jobs:
         ##       for macOS, eg. Intel + aarch64 in one binary, right?
         run: make deps
 
+      ## FIXME: For some reason running make build before make install/uninstall
+      ##        silently fails, and the binary is not created, unless make build itself
+      ##        is actually broken, and make install/make uninstall is the one creating it?
       - name: Test the project
         run: |
           make test
           make install
           make uninstall
           make build
+          ./hackchat version
 
       # - name: Build the project
       #   #run: make build
