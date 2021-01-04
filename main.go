@@ -14,11 +14,19 @@ import (
 )
 
 var (
+	// Internal version of the application
+	version string = "dev"
+
+	// Hackmud API client
 	Hackmud *hackmud.Client
+
+	// Discord client
 	Discord *discord.Client
 )
 
 func main() {
+	log.Println("--- hackchat "+version, "---")
+
 	log.Println("Starting up")
 	// TODO: Does logrus close the file or do we need to close it ourselves?
 	// Log to both console and file

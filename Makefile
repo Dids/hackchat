@@ -13,7 +13,22 @@ ENV = /usr/bin/env
 
 #export PATH := $(GOPATH)/bin:$(PATH)
 
-BINARY_VERSION?=0.0.1
+TAG_COMMIT := $(shell git rev-list --abbrev-commit --tags --max-count=1)
+TAG := $(shell git describe --abbrev=0 --tags ${TAG_COMMIT} 2>/dev/null || true)
+COMMIT := $(shell git rev-parse --short HEAD)
+DATE := $(shell git log -1 --format=%cd --date=format:"%Y%m%d")
+VERSION := $(TAG:v%=%)
+ifneq ($(COMMIT), $(TAG_COMMIT))
+	VERSION := $(VERSION)-next-$(COMMIT)-$(DATE)
+endif
+ifeq ($(VERSION),)
+	VERSION := $(COMMIT)-$(DATE)
+endif
+ifneq ($(shell git status --porcelain),)
+	VERSION := $(VERSION)-dirty
+endif
+
+# BINARY_VERSION?=0.0.1
 BINARY_OUTPUT?=hackchat
 EXTRA_FLAGS?=-mod=vendor
 
@@ -35,13 +50,14 @@ help: ## Show Help
 #all: deps build
 
 install: ## Install the binary
-	go install -v $(EXTRA_FLAGS) -ldflags "-X main.Version=$(BINARY_VERSION)"
+	go install -v $(EXTRA_FLAGS) -ldflags "-X main.version=$(VERSION)"
 
 uninstall: ## Uninstall the binary
 	rm -f $(GOPATH)/bin/$(BINARY_OUTPUT)
 
 build: ## Build the binary
-	go build -v $(EXTRA_FLAGS) -ldflags "-X main.Version=$(BINARY_VERSION)" -o $(BINARY_OUTPUT)
+	@echo "Building version $(VERSION)"
+	go build -v $(EXTRA_FLAGS) -ldflags "-X main.version=$(VERSION)" -o $(BINARY_OUTPUT)
 
 test: ## Run unit tests
 	go test -v $(EXTRA_FLAGS) -race -coverprofile=coverage.txt -covermode=atomic ./...
